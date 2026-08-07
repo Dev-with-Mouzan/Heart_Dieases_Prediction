@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>CardioPredict — Heart Disease Risk Predictor</title>
+  <meta name="description" content="AI-powered Heart Disease Risk Predictor using K-Nearest Neighbors (KNN) trained on the Heart Failure Prediction Dataset. Enter your medical data and get instant risk analysis." />
+  <meta name="keywords" content="heart disease prediction, KNN, machine learning, heart failure prediction dataset, cardiology, risk assessment" />
+  <meta property="og:title" content="CardioPredict — Heart Disease Risk Predictor" />
+  <meta property="og:description" content="Predict heart disease risk using a trained KNN model." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%23ffffff' stroke='%23d7e1ec' stroke-width='1.5'/%3E%3Cpath d='M24 36.5C19 32 11 27 11 19.5 11 15 14.5 11.5 18.5 11.5 21 11.5 23 13 24 15 25 13 27 11.5 29.5 11.5 33.5 11.5 37 15 37 19.5 37 27 29 32 24 36.5Z' fill='%23f43f5e'/%3E%3Cpath d='M13 23.5H20L22 20.5L26 26.5L28 23.5H35' fill='none' stroke='%230f8b9e' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<!-- Aurora gradient background -->
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<!-- Scroll progress bar -->
+<div id="scroll-progress" aria-hidden="true"></div>
+
+<!-- Skip link for keyboard users -->
+<a class="skip-link" href="#prediction-form-section">Skip to the prediction form</a>
+
+<!-- Particle background -->
+<canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+<!-- ── Header ─────────────────────────────────────────────────────────────── -->
+<header class="site-header" id="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="#home" class="logo" aria-label="CardioPredict home">
+        <svg class="logo-icon" viewBox="0 0 48 48" aria-hidden="true">
+          <rect width="48" height="48" rx="12" fill="#ffffff" stroke="#d7e1ec" stroke-width="1.5" />
+          <path d="M24 36.5C19 32 11 27 11 19.5 11 15 14.5 11.5 18.5 11.5 21 11.5 23 13 24 15 25 13 27 11.5 29.5 11.5 33.5 11.5 37 15 37 19.5 37 27 29 32 24 36.5Z" fill="#f43f5e" />
+          <path d="M13 23.5H20L22 20.5L26 26.5L28 23.5H35" fill="none" stroke="#0f8b9e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="logo-text">CardioPredict</span>
+      </a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#how-it-works" class="nav-link">How it works</a>
+        <a href="#prediction-form-section" class="nav-link">Predict</a>
+      </nav>
+
+      <div class="nav-right">
+        <div class="nav-badge" aria-live="polite">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">Checking API…</span>
+        </div>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-badge reveal" aria-label="Powered by KNN model">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+        </svg>
+        K-Nearest Neighbors · Heart Failure Dataset
+      </div>
+
+      <h1 class="hero-title reveal d-1">
+        Know your<br />
+        <span class="gradient-text">heart health risk</span>
+      </h1>
+
+      <p class="hero-sub reveal d-2">
+        Enter 11 clinical parameters and receive an instant, explainable
+        risk assessment from a clinically-trained KNN model.
+      </p>
+
+      <div class="ecg-panel reveal d-3" aria-hidden="true">
+        <svg class="ecg-line" viewBox="0 0 380 48" fill="none">
+          <defs>
+            <linearGradient id="ecg-grad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#0c7183" />
+              <stop offset="55%" stop-color="#06c7dc" />
+              <stop offset="100%" stop-color="#0f8b9e" />
+            </linearGradient>
+          </defs>
+          <path d="M0 24 H96 L106 10 L118 38 L128 18 L136 24 H380" stroke="url(#ecg-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <circle class="ecg-dot" id="ecg-dot" r="3.2" />
+        </svg>
+        <span class="ecg-caption">Lead II · 25 mm/s · 10 mm/mV</span>
+      </div>
+
+      <div class="hero-actions reveal d-4">
+        <button class="btn btn-primary" id="cta-btn" aria-label="Start the heart disease assessment">
+          Start assessment
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 5v14M19 12l-7 7-7-7" />
+          </svg>
+        </button>
+        <a href="#how-it-works" class="btn btn-ghost">How it works</a>
+      </div>
+
+      <div class="hero-stats" role="list" aria-label="Key statistics">
+        <div class="stat-item reveal d-1" role="listitem">
+          <div class="stat-number" data-count="11">11</div>
+          <div class="stat-label">Clinical features</div>
+        </div>
+        <div class="stat-item reveal d-2" role="listitem">
+          <div class="stat-number">KNN</div>
+          <div class="stat-label">Algorithm</div>
+        </div>
+        <div class="stat-item reveal d-3" role="listitem">
+          <div class="stat-number" data-count="918">918</div>
+          <div class="stat-label">Training samples</div>
+        </div>
+        <div class="stat-item reveal d-4" role="listitem">
+          <div class="stat-number">&lt;1s</div>
+          <div class="stat-label">Response time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ecg-strip" aria-hidden="true"></div>
+
+  <!-- ── How it works ─────────────────────────────────────────────────────── -->
+  <section class="steps" id="how-it-works">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">How it works</p>
+        <h2>Three steps to clarity</h2>
+        <p class="section-sub">No accounts. No waiting. Your result in under a second.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card reveal d-1">
+          <div class="step-card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <h3>Enter your data</h3>
+          <p>Fill in 11 standard clinical fields captured during a routine check-up.</p>
+        </div>
+        <div class="step-card reveal d-2">
+          <div class="step-card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8" />
+            </svg>
+          </div>
+          <h3>Instant analysis</h3>
+          <p>A trained KNN classifier scales and scores your data in milliseconds.</p>
+        </div>
+        <div class="step-card reveal d-3">
+          <div class="step-card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+          <h3>Clear guidance</h3>
+          <p>Receive a risk score, confidence level, and plain-language next steps.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ecg-strip" aria-hidden="true"></div>
+
+  <!-- ── Prediction Form ──────────────────────────────────────────────────── -->
+  <section class="form-section" id="prediction-form-section">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <p class="eyebrow">Step 01 · Input</p>
+        <h2>Patient clinical data</h2>
+        <p class="section-sub">Fill in all 11 medical fields accurately for the best prediction.</p>
+      </div>
+
+      <form id="predict-form" class="form-card reveal d-1" novalidate aria-label="Heart disease prediction form">
+
+        <!-- ─ Personal ─ -->
+        <div class="step-block reveal from-left">
+          <div class="step-head">
+            <span class="step-num" aria-hidden="true">01</span>
+            <div>
+              <h3 class="step-title">Personal information</h3>
+              <p class="step-desc">Basic demographics used by the model</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="age">
+                Age
+                <button type="button" class="field-help" aria-label="Help for age" data-tooltip="Patient age in years (20–100)">?</button>
+              </label>
+              <div class="input-wrap has-icon has-unit">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <input type="number" id="age" name="age" class="form-control"
+                       placeholder="e.g. 55" min="1" max="120" autocomplete="off" />
+                <span class="input-unit">years</span>
+              </div>
+              <span class="field-error" id="age-error">Please enter a valid age</span>
+            </div>
+
+            <div class="form-group">
+              <label for="sex">
+                Biological sex
+                <button type="button" class="field-help" aria-label="Help for biological sex" data-tooltip="Biological sex of the patient">?</button>
+              </label>
+              <select id="sex" name="sex" class="form-control">
+                <option value="" disabled selected>Select sex</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+              <span class="field-error" id="sex-error">Please select a value</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ Cardiac ─ -->
+        <div class="step-block reveal from-right">
+          <div class="step-head">
+            <span class="step-num" aria-hidden="true">02</span>
+            <div>
+              <h3 class="step-title">Cardiac parameters</h3>
+              <p class="step-desc">Resting measurements from your last exam</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="chest_pain_type">
+                Chest pain type
+                <button type="button" class="field-help" aria-label="Help for chest pain type" data-tooltip="ATA = Atypical angina, NAP = Non-anginal pain, TA = Typical angina, ASY = Asymptomatic">?</button>
+              </label>
+              <select id="chest_pain_type" name="chest_pain_type" class="form-control">
+                <option value="" disabled selected>Select type</option>
+                <option value="ATA">ATA — Atypical angina</option>
+                <option value="NAP">NAP — Non-anginal pain</option>
+                <option value="TA">TA — Typical angina</option>
+                <option value="ASY">ASY — Asymptomatic</option>
+              </select>
+              <span class="field-error" id="chest_pain_type-error">Please select a value</span>
+            </div>
+
+            <div class="form-group">
+              <label for="resting_bp">
+                Resting blood pressure
+                <button type="button" class="field-help" aria-label="Help for resting blood pressure" data-tooltip="Resting blood pressure in mm Hg on admission (80–250)">?</button>
+              </label>
+              <div class="input-wrap has-icon has-unit">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m12 14 4-4" />
+                  <path d="M3.34 19a10 10 0 1 1 17.32 0" />
+                </svg>
+                <input type="number" id="resting_bp" name="resting_bp" class="form-control"
+                       placeholder="e.g. 130" min="0" max="250" step="0.1" autocomplete="off" />
+                <span class="input-unit">mm Hg</span>
+              </div>
+              <span class="field-error" id="resting_bp-error">Please enter a valid value</span>
+            </div>
+
+            <div class="form-group">
+              <label for="cholesterol">
+                Serum cholesterol
+                <button type="button" class="field-help" aria-label="Help for serum cholesterol" data-tooltip="Serum cholesterol in mg/dl (100–700)">?</button>
+              </label>
+              <div class="input-wrap has-icon has-unit">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z" />
+                </svg>
+                <input type="number" id="cholesterol" name="cholesterol" class="form-control"
+                       placeholder="e.g. 240" min="0" max="700" step="0.1" autocomplete="off" />
+                <span class="input-unit">mg/dl</span>
+              </div>
+              <span class="field-error" id="cholesterol-error">Please enter a valid value</span>
+            </div>
+
+            <div class="form-group">
+              <label for="fasting_bs">
+                Fasting blood sugar &gt; 120 mg/dl
+                <button type="button" class="field-help" aria-label="Help for fasting blood sugar" data-tooltip="Is fasting blood sugar higher than 120 mg/dl?">?</button>
+              </label>
+              <select id="fasting_bs" name="fasting_bs" class="form-control">
+                <option value="" disabled selected>Select</option>
+                <option value="1">Yes (&gt; 120 mg/dl)</option>
+                <option value="0">No (≤ 120 mg/dl)</option>
+              </select>
+              <span class="field-error" id="fasting_bs-error">Please select a value</span>
+            </div>
+
+            <div class="form-group">
+              <label for="resting_ecg">
+                Resting ECG result
+                <button type="button" class="field-help" aria-label="Help for resting ECG" data-tooltip="Normal, ST-T wave abnormality, or left ventricular hypertrophy">?</button>
+              </label>
+              <select id="resting_ecg" name="resting_ecg" class="form-control">
+                <option value="" disabled selected>Select result</option>
+                <option value="Normal">Normal</option>
+                <option value="ST">ST-T wave abnormality</option>
+                <option value="LVH">Left ventricular hypertrophy</option>
+              </select>
+              <span class="field-error" id="resting_ecg-error">Please select a value</span>
+            </div>
+
+            <div class="form-group">
+              <label for="max_hr">
+                Maximum heart rate
+                <button type="button" class="field-help" aria-label="Help for maximum heart rate" data-tooltip="Maximum heart rate achieved (60–250 bpm)">?</button>
+              </label>
+              <div class="input-wrap has-icon has-unit">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
+                </svg>
+                <input type="number" id="max_hr" name="max_hr" class="form-control"
+                       placeholder="e.g. 150" min="60" max="250" autocomplete="off" />
+                <span class="input-unit">bpm</span>
+              </div>
+              <span class="field-error" id="max_hr-error">Please enter a valid value</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ Exercise ─ -->
+        <div class="step-block reveal from-left">
+          <div class="step-head">
+            <span class="step-num" aria-hidden="true">03</span>
+            <div>
+              <h3 class="step-title">Exercise &amp; stress test</h3>
+              <p class="step-desc">How your heart responds under load</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="exercise_angina">
+                Exercise-induced angina
+                <button type="button" class="field-help" aria-label="Help for exercise-induced angina" data-tooltip="Does exercise induce chest pain?">?</button>
+              </label>
+              <select id="exercise_angina" name="exercise_angina" class="form-control">
+                <option value="" disabled selected>Select</option>
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+              </select>
+              <span class="field-error" id="exercise_angina-error">Please select a value</span>
+            </div>
+
+            <div class="form-group">
+              <label for="oldpeak">
+                ST depression (oldpeak)
+                <button type="button" class="field-help" aria-label="Help for oldpeak" data-tooltip="ST depression induced by exercise relative to rest (0.0–6.2)">?</button>
+              </label>
+              <div class="input-wrap has-icon has-unit">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 17l-8.5-8.5-5 5L2 7" />
+                  <path d="M16 17h6v-6" />
+                </svg>
+                <input type="number" id="oldpeak" name="oldpeak" class="form-control"
+                       placeholder="e.g. 1.5" min="0" max="10" step="0.1" autocomplete="off" />
+                <span class="input-unit">mm</span>
+              </div>
+              <span class="field-error" id="oldpeak-error">Please enter a valid value</span>
+            </div>
+
+            <div class="form-group">
+              <label for="st_slope">
+                ST segment slope
+                <button type="button" class="field-help" aria-label="Help for ST segment slope" data-tooltip="Slope of the peak exercise ST segment: Up, Flat or Down">?</button>
+              </label>
+              <select id="st_slope" name="st_slope" class="form-control">
+                <option value="" disabled selected>Select slope</option>
+                <option value="Up">Up — Upsloping</option>
+                <option value="Flat">Flat</option>
+                <option value="Down">Down — Downsloping</option>
+              </select>
+              <span class="field-error" id="st_slope-error">Please select a value</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ Actions ─ -->
+        <div class="submit-section">
+          <div id="error-banner" role="alert"></div>
+
+          <button type="submit" class="btn btn-primary btn-predict" id="btn-predict" aria-label="Submit prediction">
+            <span class="btn-icon" id="btn-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </span>
+            <div class="spinner" id="btn-spinner" aria-hidden="true"></div>
+            <span id="btn-text">Predict heart disease risk</span>
+          </button>
+
+          <button type="button" class="btn btn-ghost" id="btn-reset">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            Reset form
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ── Result ────────────────────────────────────────────────────────────── -->
+  <section class="result-section" id="result-section" aria-live="polite">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <p class="eyebrow">Step 02 · Output</p>
+        <h2>Prediction result</h2>
+        <p class="section-sub">Based on your clinical data, here is the model's assessment.</p>
+      </div>
+
+      <div class="result-card">
+
+        <div class="result-header">
+          <div class="result-icon" id="result-icon">
+            <svg class="ic-healthy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              <path d="m9 11 2 2 4-4" />
+            </svg>
+            <svg class="ic-disease" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              <path d="M12 9v4" />
+              <path d="M12 17h.01" />
+            </svg>
+          </div>
+          <div class="result-heading">
+            <div class="result-title" id="result-title">—</div>
+            <p class="result-message" id="result-message">—</p>
+          </div>
+        </div>
+
+        <div class="result-body">
+
+          <div class="gauge-wrapper">
+            <div class="gauge-label">Heart disease risk</div>
+            <svg class="gauge-svg" viewBox="0 0 200 112" role="img" aria-label="Risk gauge">
+              <defs>
+                <linearGradient id="gauge-grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#10b981" />
+                  <stop offset="45%" stop-color="#f59e0b" />
+                  <stop offset="100%" stop-color="#f43f5e" />
+                </linearGradient>
+              </defs>
+              <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" stroke-linecap="round" />
+              <path class="gauge-fill" id="gauge-fill"
+                    d="M 20 100 A 80 80 0 0 1 180 100"
+                    stroke="url(#gauge-grad)"
+                    stroke-dasharray="251.3"
+                    stroke-dashoffset="251.3" />
+              <text class="gauge-value" id="gauge-value" x="100" y="92" text-anchor="middle">0%</text>
+              <text class="gauge-unit" x="100" y="107" text-anchor="middle">Risk score</text>
+            </svg>
+            <div class="gauge-ticks" aria-hidden="true">
+              <span>Low</span><span>Moderate</span><span>High</span>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="value" id="stat-confidence" style="color: var(--accent-blue)">—</div>
+              <div class="label">Model confidence</div>
+            </div>
+            <div class="stat-card">
+              <div class="value" id="stat-prediction" style="color: var(--text-primary)">—</div>
+              <div class="label">Prediction</div>
+            </div>
+            <div class="stat-card stat-card-wide">
+              <div class="stat-card-row">
+                <span class="label">Risk level</span>
+                <span class="risk-badge Low" id="risk-badge">—</span>
+              </div>
+              <div class="value value-sm" id="stat-risk-level">—</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="disclaimer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+          <p>
+            <strong>Disclaimer:</strong> this tool is for educational purposes only and is not a
+            substitute for professional medical advice. Please consult a qualified cardiologist
+            for any health concerns.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="ecg-strip" aria-hidden="true" style="margin-bottom: var(--space-8)"></div>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg class="logo-icon" viewBox="0 0 48 48" aria-hidden="true" style="width:32px;height:32px">
+          <rect width="48" height="48" rx="12" fill="#ffffff" stroke="#d7e1ec" stroke-width="1.5" />
+          <path d="M24 36.5C19 32 11 27 11 19.5 11 15 14.5 11.5 18.5 11.5 21 11.5 23 13 24 15 25 13 27 11.5 29.5 11.5 33.5 11.5 37 15 37 19.5 37 27 29 32 24 36.5Z" fill="#f43f5e" />
+          <path d="M13 23.5H20L22 20.5L26 26.5L28 23.5H35" fill="none" stroke="#0f8b9e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>CardioPredict</span>
+      </div>
+      <p class="footer-credit">
+        Built with <a href="https://fastapi.tiangolo.com" target="_blank" rel="noopener">FastAPI</a> &amp; Vanilla JS ·
+        KNN model trained on the
+        <a href="https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction" target="_blank" rel="noopener">Heart Failure Prediction Dataset</a>
+      </p>
+      <p class="footer-note">For educational purposes only · Not a medical device</p>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="to-top" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7" />
+  </svg>
+</button>
+
+<script src="js/app.js"></script>
+</body>
+</html>
