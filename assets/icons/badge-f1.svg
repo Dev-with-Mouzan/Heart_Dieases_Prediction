@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 20">
+  <rect width="60" height="20" fill="#1f2d3d"/>
+  <rect x="60" width="48" height="20" fill="#0f8b9e"/>
+  <text x="30" y="14" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" textLength="52" lengthAdjust="spacingAndGlyphs">F1-SCORE</text>
+  <text x="84" y="14" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" textLength="40" lengthAdjust="spacingAndGlyphs">89.9%</text>
+</svg>

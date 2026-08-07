@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 20">
+  <rect width="62" height="20" fill="#1f2d3d"/>
+  <rect x="62" width="48" height="20" fill="#10b981"/>
+  <text x="31" y="14" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" textLength="54" lengthAdjust="spacingAndGlyphs">ACCURACY</text>
+  <text x="86" y="14" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" textLength="40" lengthAdjust="spacingAndGlyphs">88.6%</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 20">
+  <rect width="50" height="20" fill="#1f2d3d"/>
+  <rect x="50" width="48" height="20" fill="#3776AB"/>
+  <text x="25" y="14" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" textLength="42" lengthAdjust="spacingAndGlyphs">PYTHON</text>
+  <text x="74" y="14" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" textLength="40" lengthAdjust="spacingAndGlyphs">3.11+</text>
+</svg>
