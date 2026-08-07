@@ -290,7 +290,5 @@ always consult a qualified cardiologist for any health concerns.
 ---
 
 <p align="center">
-  <img src="assets/icons/logo.svg" width="40" height="40" alt="Heart Disease Prediction logo" />
-  <br />
-  <sub>Built with FastAPI & scikit-learn · KNN trained on the Heart Failure Prediction Dataset</sub>
+  <sub>Built with 💓 By Mouzan Raza</sub>
 </p>
